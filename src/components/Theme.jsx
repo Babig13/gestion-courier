@@ -1,5 +1,5 @@
 // theme.jsx
-import React, { createContext, useContext } from "react";
+/*import React, { createContext, useContext } from "react";
 
 //on crée un context:ici, ThemeContext.
 //context est un concept dans React qui permet de partager
@@ -57,4 +57,4 @@ export const theme = {
     },
   },
   // ... autres variables de style ...
-};
+};*/
