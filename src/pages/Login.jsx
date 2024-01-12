@@ -107,6 +107,7 @@ const Login = () => {
   const [entreprise, setEntreprise] = useState([]);
   const [selectedCompany, setSelectedCompany] = useState("");
   const [loggedIn, setLoggedIn] = useState(false);
+  const [tabselect, settabselect] = useState([]);
   //const [nomEntreprise, setNomEntreprise] = useState("");
 
   // Vérifier si le bouton de connexion doit être activé
@@ -171,13 +172,16 @@ const Login = () => {
         // Vérification du succès de la récupération des entreprises
         if (data.length > 0) {
           // Formatage des données pour les adapter au composant Autocomplete
-          const formattedData = data.map((entreprise, index) => ({
-            label: entreprise.firm_name,
-            value: entreprise._id, // Utilisez _id comme clé unique
-            key: entreprise._id, // Ajoutez cette ligne pour spécifier la clé
-          }));
 
-          setEntreprise(formattedData);
+          setEntreprise(data);
+
+          var tab = [];
+
+          for (let i = 0; i < data.length; i++) {
+            tab.push(data[i].firm_name);
+          }
+
+          settabselect(tab);
         } else {
           console.error("Aucune entreprise trouvée dans la réponse de l'API");
         }
@@ -190,10 +194,17 @@ const Login = () => {
     <div className="login-page">
       <img src="./logo.png" alt="Logo de NotiMail" />
       {/* Composant Autocomplete pour la sélection de l'entreprise */}
+
+      {/* <select>
+        {entreprise.map((el) => {
+          return <option value={el.firm_name}>{el.firm_name}</option>;
+        })}
+      </select> */}
+
       <Autocomplete
         title="Entreprises"
         onChange={(changedItem) => setSelectedCompany(changedItem)}
-        items={entreprise}
+        items={tabselect}
       >
         {({
           getInputProps,
