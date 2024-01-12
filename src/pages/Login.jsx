@@ -101,29 +101,27 @@ import { FaChevronDown, FaUnlock } from "react-icons/fa6";
 // ... (autres imports)
 
 const Login = () => {
+  // États pour gérer les données de l'utilisateur et l'état de connexion
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [entreprise, setEntreprise] = useState([]);
   const [selectedCompany, setSelectedCompany] = useState("");
   const [loggedIn, setLoggedIn] = useState(false);
+  //const [nomEntreprise, setNomEntreprise] = useState("");
 
+  // Vérifier si le bouton de connexion doit être activé
+  const isLoginButtonDisabled = !selectedCompany || !password;
+
+  // Fonction appelée lorsqu'un utilisateur tente de se connecter
   const handleLogin = () => {
-    // Vérification factice. On remplace par les infos stockées dans la page Admin/création de compte
-    if (
-      (username === "admin" && password === "admin") ||
-      (username === "user" && password === "user")
-    ) {
-      setLoggedIn(true);
-    } else {
-      alert("Identifiants incorrects");
-    }
-  };
+    // Construction du corps de la requête pour l'identification du client
+    const requestBody = {
+      firm_name: selectedCompany,
+      four_digit_code: password,
+    };
 
-  useEffect(() => {
-    // Fetch des noms des entreprises depuis l'API
-    const requestBody = {};
-
-    fetch("http://51.83.69.229:3000/api/users/gestionEntreprise", {
+    // Requête au serveur pour vérifier les identifiants
+    fetch("http://51.83.69.229:3000/api/users/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -132,30 +130,67 @@ const Login = () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log(data); // Ajout de cette ligne pour inspecter la structure de l'objet dans la console
+        // Vérification du succès de la connexion
+        if (data && data.success) {
+          setLoggedIn(true);
+        } else {
+          alert("Identifiants incorrects");
+        }
+      })
+      .catch((error) => console.error(error));
+  };
 
-        // Vérifiez si les données sont à l'intérieur d'une propriété de l'objet (ajustez "votreProprieteTableau" en conséquence)
-        const dataArray = data.hasOwnProperty("votreProprieteTableau")
-          ? data.votreProprieteTableau
-          : data;
+  // Effet pour charger la liste des entreprises depuis l'API lors du chargement de la page
+  useEffect(() => {
+    // Requête au serveur pour obtenir la liste des entreprises
+    fetch("http://51.83.69.229:3000/api/users/gestionEntreprise", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => {
+        //  Vérifier si la réponse est OK
+        if (!response.ok) {
+          throw new Error("Réponse non valide du serveur");
+        }
 
-        console.log(dataArray); // Loguez ici le tableau récupéré
+        // Vérifier le type de contenu de la réponse
+        const contentType = response.headers.get("content-type");
+        if (!contentType || !contentType.includes("application/json")) {
+          throw new Error("La réponse n'est pas au format JSON");
+        }
 
-        // Formattez les données pour les adapter au composant Autocomplete
-        const formattedData = dataArray.map((entreprise) => ({
-          label: entreprise.nom,
-          value: entreprise.id,
-        }));
+        // Parse la réponse en JSON
+        return response.json();
+      })
 
-        setEntreprise(formattedData);
-        console.log(formattedData);
+      .then((data) => {
+        // Log de la réponse brute pour le débogage
+        console.log(data);
+
+        // Vérification du succès de la récupération des entreprises
+        if (data.length > 0) {
+          // Formatage des données pour les adapter au composant Autocomplete
+          const formattedData = data.map((entreprise, index) => ({
+            label: entreprise.firm_name,
+            value: entreprise._id, // Utilisez _id comme clé unique
+            key: entreprise._id, // Ajoutez cette ligne pour spécifier la clé
+          }));
+
+          setEntreprise(formattedData);
+        } else {
+          console.error("Aucune entreprise trouvée dans la réponse de l'API");
+        }
       })
       .catch((error) => console.error(error));
   }, []);
 
+  // Rendu de l'interface utilisateur
   return (
     <div className="login-page">
       <img src="./logo.png" alt="Logo de NotiMail" />
+      {/* Composant Autocomplete pour la sélection de l'entreprise */}
       <Autocomplete
         title="Entreprises"
         onChange={(changedItem) => setSelectedCompany(changedItem)}
@@ -180,6 +215,7 @@ const Login = () => {
           </Pane>
         )}
       </Autocomplete>
+      {/* Champ de mot de passe */}
       <div className="login-password">
         <input
           type="password"
@@ -189,7 +225,9 @@ const Login = () => {
         />
         <FaUnlock />
       </div>
-      <button onClick={handleLogin}>Se connecter</button>
+      <button onClick={handleLogin} disabled={isLoginButtonDisabled}>
+        Se connecter
+      </button>
     </div>
   );
 };
