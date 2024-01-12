@@ -139,6 +139,8 @@ const Login = () => {
           ? data.votreProprieteTableau
           : data;
 
+        console.log(dataArray); // Loguez ici le tableau récupéré
+
         // Formattez les données pour les adapter au composant Autocomplete
         const formattedData = dataArray.map((entreprise) => ({
           label: entreprise.nom,
