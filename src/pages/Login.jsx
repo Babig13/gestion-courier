@@ -122,11 +122,10 @@ const Login = () => {
 
     // Requête au serveur pour vérifier les identifiants
     fetch("http://51.83.69.229:3000/api/users/login", {
-      method: "POST",
+      method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(requestBody),
     })
       .then((response) => response.json())
       .then((data) => {
