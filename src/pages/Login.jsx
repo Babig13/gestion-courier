@@ -1,113 +1,20 @@
 //création de la page de connexion
 
+// Import des composants nécessaires depuis Evergreen UI et React
 import { Autocomplete, Button, Pane, TextInput } from "evergreen-ui";
 import React, { useState, useEffect } from "react";
 import { FaChevronDown, FaUnlock } from "react-icons/fa6";
+import "./login.css"; // Import du fichier CSS pour la page de connexion
 
-// const Login = () => {
-//   const [username, setUsername] = useState(""); //nom de l'utlisateur
-//   const [password, setPassword] = useState(""); //le mot de passe
-//   const [entreprise, setEntreprise] = useState([]); //infos sur l'entreprise sélectionnée dans le menu déroulant
-//   const [selectedCompany, setSelectedCompany] = useState(""); // Ajout de l'état pour stocker l'entreprise sélectionnée
-//   const [loggedIn, setLoggedIn] = useState(false); //loggedIn=connecté
-
-//   const handleLogin = () => {
-//     //est appelée quand l'utilisateur clique sur le bouton"connexion".
-
-//     // Vérification factice. On remplace par les infos stockées dans la page Admin/création de compte
-//     if (username === "admin" && password === "admin") {
-//       setLoggedIn(true);
-//     } else if (username === "user" && password === "user") {
-//       setLoggedIn(true);
-//     } else {
-//       alert("Identifiants incorrects");
-//     }
-//   };
-
-//   useEffect(() => {
-//     // Fetch des noms des entreprises depuis l'API
-//     const requestBody = {};
-
-//     fetch("http://51.83.69.229:3000/api/users/gestionEntreprise", {
-//       method: "POST",
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//       body: JSON.stringify(requestBody),
-//     })
-//       .then((response) => response.json())
-//       .then((data) => {
-//         setEntreprise(data);
-//         console.log(data);
-//       })
-//       .catch((error) => console.error(error));
-//   }, []);
-
-//   return (
-//     <div className="login-page">
-//       <img src="./logo.png" alt="Logo de NotiMail" />
-//       {/* //   <input */}
-//       {/* //     type="text"
-//     //     placeholder="Nom de l'entreprise"
-//     //     value={selectedCompany}
-//     //     onChange={(e) => setSelectedCompany(e.target.value)}
-//     //   /> */}
-//       <Autocomplete
-//         title="Entreprises"
-//         onChange={(changedItem) => setSelectedCompany(changedItem)}
-//         items={entreprise}
-//       >
-//         {({
-//           getInputProps,
-//           getToggleButtonProps,
-//           getRef,
-//           inputValue,
-//           toggleMenu,
-//         }) => (
-//           <Pane ref={getRef} display="flex">
-//             <TextInput
-//               placeholder="Entreprise
-//               "
-//               value={inputValue}
-//               {...getInputProps()}
-//             />
-//             <Button onClick={toggleMenu} {...getToggleButtonProps()}>
-//               <FaChevronDown />
-//             </Button>
-//           </Pane>
-//         )}
-//       </Autocomplete>
-//       <div className="login-password">
-//         <input
-//           type="password"
-//           placeholder="Mot de passe"
-//           value={password}
-//           onChange={(e) => setPassword(e.target.value)}
-//         />
-//         <FaUnlock />
-//       </div>
-//       <button onClick={handleLogin}>Se connecter</button>
-//     </div>
-//   );
-// };
-
-// export default Login;
-// ... (autres imports)
-
-// ... (autres imports)
-
-// ... (autres imports)
-
-// ... (autres imports)
-
+// Définition du composant de connexion
 const Login = () => {
   // États pour gérer les données de l'utilisateur et l'état de connexion
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [entreprise, setEntreprise] = useState([]);
-  const [selectedCompany, setSelectedCompany] = useState("");
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [tabselect, settabselect] = useState([]);
+  const [username, setUsername] = useState(""); // Nom de l'utilisateur (non utilisé dans le code actuel)
+  const [password, setPassword] = useState(""); // Mot de passe
+  const [entreprise, setEntreprise] = useState([]); // Liste des entreprises récupérée depuis l'API
+  const [selectedCompany, setSelectedCompany] = useState(""); // Entreprise sélectionnée par l'utilisateur
+  const [loggedIn, setLoggedIn] = useState(false); // État de connexion
+  const [tabselect, settabselect] = useState([]); // Tableau pour stocker les noms des entreprises (utilisé dans Autocomplete)
   //const [nomEntreprise, setNomEntreprise] = useState("");
 
   // Vérifier si le bouton de connexion doit être activé
@@ -123,7 +30,7 @@ const Login = () => {
 
     // Requête au serveur pour vérifier les identifiants
     fetch("http://51.83.69.229:3000/api/users/login", {
-      method: "GET",
+      method: "POST", // Méthode POST
       headers: {
         "Content-Type": "application/json",
       },
@@ -175,12 +82,14 @@ const Login = () => {
 
           setEntreprise(data);
 
+          //Création d'un tableau contenant les noms des entreprises
           var tab = [];
 
           for (let i = 0; i < data.length; i++) {
             tab.push(data[i].firm_name);
           }
 
+          // Mise à jour de l'état du tableau des noms d'entreprises
           settabselect(tab);
         } else {
           console.error("Aucune entreprise trouvée dans la réponse de l'API");
@@ -201,40 +110,53 @@ const Login = () => {
         })}
       </select> */}
 
-      <Autocomplete
-        title="Entreprises"
-        onChange={(changedItem) => setSelectedCompany(changedItem)}
-        items={tabselect}
-      >
-        {({
-          getInputProps,
-          getToggleButtonProps,
-          getRef,
-          inputValue,
-          toggleMenu,
-        }) => (
-          <Pane ref={getRef} display="flex">
-            <TextInput
-              placeholder="Entreprise"
-              value={inputValue}
-              {...getInputProps()}
-            />
-            <Button onClick={toggleMenu} {...getToggleButtonProps()}>
-              <FaChevronDown />
-            </Button>
-          </Pane>
-        )}
-      </Autocomplete>
+      {/*  Champ d'autocomplétion(saisie semi-automatique) pour la sélection d'une entreprise */}
+      <div className="login-name">
+        <Autocomplete
+          title="Entreprises" //Titre de l'autocomplétion
+          onChange={(changedItem) => setSelectedCompany(changedItem)}
+          // Gère le changement de l'élément sélectionné
+          items={tabselect} // Liste des éléments à afficher dans l'autocomplétion
+        >
+          {({
+            getInputProps,
+            getToggleButtonProps,
+            getRef,
+            inputValue,
+            toggleMenu,
+          }) => (
+            <Pane ref={getRef} display="flex">
+              <TextInput
+                placeholder="Entreprise" // Placeholder du champ de texte
+                value={inputValue} // Valeur du champ de texte
+                {...getInputProps()} // Propriétés pour le champ de texte (Autocomplétion)
+              />
+              <Button
+                onClick={toggleMenu} // Gère le clic sur le bouton
+                {...getToggleButtonProps()} // Propriétés pour le bouton (Autocomplétion)
+                className="autocomplete-button" // Classe CSS pour le bouton
+              >
+                {/*Icône flèche vers le bas pour indiquer le menu déroulant  */}
+                <FaChevronDown />
+              </Button>
+            </Pane>
+          )}
+        </Autocomplete>
+      </div>
+
       {/* Champ de mot de passe */}
       <div className="login-password">
         <input
           type="password"
-          placeholder="Mot de passe"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          placeholder="Mot de passe" // Placeholder du champ de mot de passe
+          value={password} // Valeur du champ de mot de passe
+          onChange={(e) => setPassword(e.target.value)} // Gère le changement de la valeur du champ de mot de passe
         />
+        {/* Icône de cadenas pour indiquer le champ de mot de passe */}
         <FaUnlock />
       </div>
+
+      {/* Bouton de connexion */}
       <button onClick={handleLogin} disabled={isLoginButtonDisabled}>
         Se connecter
       </button>
@@ -242,4 +164,5 @@ const Login = () => {
   );
 };
 
+// Export du composant pour pouvoir l'utiliser ailleurs dans l'application
 export default Login;

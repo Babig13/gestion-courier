@@ -1,0 +1,113 @@
+/* login.css */
+
+/* Reset de la marge et du padding pour le corps de la page */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Karla', sans-serif; /* Utilisation de la police Karla */
+    background-color: var(--white); /* Couleur de fond gris définie dans :root */
+  }
+  
+  /* Style du conteneur principal de la page de connexion */
+  .login-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; /* Pleine hauteur de la vue */
+  }
+  
+  /* Style de l'image du logo */
+  .login-page img {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  /* Style du composant Autocomplete */
+  .login-page .Autocomplete {
+    margin-top: 20px;
+    width: 80%; /* Ajustez la largeur selon les besoins */
+    display: flex;
+  }
+  
+
+  .login-page .login-name {
+    display: flex;
+    flex-direction: row;
+    width: 300px;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 8px;
+    background: var(--grey);
+    }
+
+    .login-page .login-name input {
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    align-items: center;
+    border: none;
+    border-radius: 8px;
+    background:var(--grey);
+      }
+
+    .login-page .login-name, .login-page .login-name input {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+      }
+  
+  /* Style du champ de mot de passe */
+  .login-page .login-password {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    width: 300px;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 8px;
+    background: var(--grey);
+  }
+  
+  .login-page .login-password input {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+background: #EBEBEB;
+  }
+  .login-page .login-password, .login-page .login-password input {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+  }
+  
+  /* Style de l'icône de déverrouillage */
+  .login-page .login-password svg {
+    margin-left: 10px;
+    color: var(--primary);
+  }
+  
+  /* Style du bouton de connexion */
+  .login-page button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: var(--grey);
+    color: var(--primary);
+    border: none;
+    cursor: pointer;
+    font-family: 'Kanit', sans-serif; /* Utilisation de la police Kanit */
+  }
+  
+  .login-page button:disabled {
+    background-color: var(--secondary); /* Couleur de fond pour le bouton désactivé */
+    color: white;
+    cursor: not-allowed;
+    display: inline-flex;
+    padding: 12px 24px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border-radius: 8px;
+  }
+  
