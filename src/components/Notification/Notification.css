@@ -1,0 +1,42 @@
+.notification-modal button{
+    height: 50px;
+    width: 50px;
+    border-radius: 70px;
+    border: none;    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.notif-cancel-button{
+    background-color: var(--red);
+
+}
+
+.notif-validate-button{
+    background-color: var(--validation);
+}
+
+.notif-button-frame{
+    display: flex;
+    flex-direction: row;
+    gap: 62px;
+}
+
+.notification-modal{
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    align-items: center;
+    padding: 36px 32px;
+    background-color: var(--primary);
+    width: fit-content;
+    border-radius: 12px;
+    margin: auto;
+}
+
+.notification-modal h2{
+    font-family: var(--body);
+    color: var(--white);
+    font-weight: 500;
+}

@@ -1,6 +1,6 @@
 
 /* Style de la page */
-.create-user-page {
+.edit-user-page {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -13,7 +13,7 @@
   }
   
   /* Logo */
-  .create-user-logo {
+  .edit-user-logo {
     max-width: 100%; /* Le logo ne dépassera pas la largeur parente */
     margin-top: 20px; /* Espacement en haut */
     margin-bottom: 20px; /* Espacement en bas */

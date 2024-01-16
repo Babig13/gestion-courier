@@ -1,0 +1,26 @@
+header{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    background-color:#EBEBEB;
+    justify-content: space-between;
+    align-content: center;
+    color: black;
+    padding: 24px 52px;
+}
+
+header button{
+    color: var(--white);
+    font-family: var(--body);
+    border: none;
+    background-color: var(--red);
+    border-radius: 8px;
+    padding: 8px 24px;
+    font-weight: 500;
+    font-size: 16px;
+}
+
+header p{
+    font-family: var(--header);
+    color: var(--primary);
+}

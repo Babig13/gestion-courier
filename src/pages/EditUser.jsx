@@ -2,14 +2,15 @@
 import React, { useState, useEffect } from "react";
 import { Button, Card, TextInput, Checkbox } from "evergreen-ui";
 import { FaArrowLeft, FaTrash } from "react-icons/fa6";
-import "./CreateUser.css"; // Lien vers le fichier CSS
-import { useNavigate } from "react-router-dom"; // Ajout de l'import pour revenir en arrière
+import "./EditUser.css"; // Lien vers le fichier CSS
+import { useNavigate, useParams } from "react-router-dom"; // Ajout de l'import pour revenir en arrière
 
 // Définition du composant de création de compte
-const CreateUser = () => {
-  const navigate = useNavigate(); // Initialisez useNavigate
-
+const EditUser = () => {
   // États pour gérer les données du formulaire
+  const navigate = useNavigate();
+  const { firm_name } = useParams();
+
   const [formData, setFormData] = useState({
     entreprise: "",
     prenom: "",
@@ -19,10 +20,65 @@ const CreateUser = () => {
     isAdmin: false,
   });
 
+  // Effet pour charger les données de l'utilisateur lors du chargement du composant
+  useEffect(() => {
+    //  Utilisation de l'API pour obtenir un utilisateur par le nom de l'entreprise
+    // fetch("http://51.83.69.229:3000/api/user/firm/:firm_name", {
+    //   method: "GET", // Méthode GET
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+
+    //   //body: JSON.stringify(formData), // Ajout des données du formulaire
+
+    //   // N'oubliez pas de mettre le vrai nom de l'entreprise ici
+    //   // Par exemple, si formData.entreprise est "NomEntreprise", l'URL devrait être `/firm/NomEntreprise`
+    // })
+    //   .then((response) => response.json())
+    //   .then((userData) => {
+    //     // Mettre à jour l'état avec les données récupérées
+
+    // Utilisez une fonction asynchrone pour effectuer la requête
+    const fetchCompanyData = async () => {
+      try {
+        // Utilisez le nom de l'entreprise extrait de useParams dans l'URL de la requête
+        const response = await fetch(
+          `http://51.83.69.229:3000/api/user/firm/${firm_name}`
+        );
+
+        // Vérifiez si la requête a réussi
+        if (response.ok) {
+          const userData = await response.json();
+          // Mettez à jour l'état avec les données récupérées
+          setFormData({
+            entreprise: userData.entreprise,
+            prenom: userData.prenom,
+            nom: userData.nom,
+            telephone: userData.telephone,
+            email: userData.email,
+            isAdmin: userData.isAdmin,
+          });
+        } else {
+          console.error(
+            `Erreur lors de la récupération des données de l'entreprise. Statut de la réponse : ${response.status}`
+          );
+        }
+      } catch (error) {
+        console.error(
+          "Erreur lors de la récupération des données de l'entreprise",
+          error
+        );
+      }
+    };
+
+    // Appelez la fonction fetchCompanyData
+    fetchCompanyData();
+  }, [firm_name]);
+
   // Fonction pour gérer la soumission du formulaire
   const handleSubmit = () => {
-    fetch("http://51.83.69.229:3000/api/users/createUser", {
-      method: "POST", // Méthode POST
+    fetch(`http://51.83.69.229:3000/api/users/firm/${firm_name}`, {
+      method: "PUT", // Méthode PUT
       headers: {
         "Content-Type": "application/json",
       },
@@ -31,8 +87,6 @@ const CreateUser = () => {
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
-        // Rediriger vers la page de connexion après la création de l'utilisateur
-        //history.push("/login");
       })
       .catch((error) => console.error(error));
     // Exemple : redirection vers la page de connexion après la création de l'utilisateur
@@ -60,7 +114,7 @@ const CreateUser = () => {
   };
 
   return (
-    <div className="create-user-page">
+    <div className="edit-user-page">
       {/* Logo */}
       <img src="../logo.png" alt="Logo de NotiMail" />
 
@@ -170,7 +224,7 @@ const CreateUser = () => {
             <Button
               appearance="primary"
               intent="danger"
-              iconBefore={FaTrash} //icone poubelle
+              iconBefore={FaTrash}
               onClick={handleDelete}
             >
               Supprimer
@@ -187,4 +241,4 @@ const CreateUser = () => {
   );
 };
 
-export default CreateUser;
+export default EditUser;

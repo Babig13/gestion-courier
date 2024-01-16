@@ -50,7 +50,7 @@ const Login = () => {
   // Effet pour charger la liste des entreprises depuis l'API lors du chargement de la page
   useEffect(() => {
     // Requête au serveur pour obtenir la liste des entreprises
-    fetch("http://51.83.69.229:3000/api/users/gestionEntreprise", {
+    fetch("http://51.83.69.229:3000/api/users/gestionEntrepriseFirmName", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -71,23 +71,26 @@ const Login = () => {
         // Parse la réponse en JSON
         return response.json();
       })
-
+      // const [tabselect, settabselect] = useState([]);
       .then((data) => {
         // Log de la réponse brute pour le débogage
+
         console.log(data);
 
         // Vérification du succès de la récupération des entreprises
-        if (data.length > 0) {
+        if (data.firmNames && data.firmNames.length > 0) {
           // Formatage des données pour les adapter au composant Autocomplete
 
-          setEntreprise(data);
+          setEntreprise(data.firmNames);
 
           //Création d'un tableau contenant les noms des entreprises
-          var tab = [];
+          const tab = data.firmNames.map((el) => el.firm_name);
 
-          for (let i = 0; i < data.length; i++) {
-            tab.push(data[i].firm_name);
-          }
+          // const tab = [];
+
+          // for (let i = 0; i < data.firmNames.length; i++) {
+          //   tab.push(data[i].firm_name);
+          // }
 
           // Mise à jour de l'état du tableau des noms d'entreprises
           settabselect(tab);
@@ -97,6 +100,19 @@ const Login = () => {
       })
       .catch((error) => console.error(error));
   }, []);
+
+  //pour savoir quel type: objet ou tableau
+  // const typeDuState = typeof tabselect;
+  // console.log(typeDuState);
+
+  const tableauEntreprise = Object.entries(tabselect);
+
+  // const nomEntreprise = tableauEntreprise.map(([cle, valeur]) => valeur);
+  // console.log(nomEntreprise);
+  const nomEntreprise = tabselect
+    ? tabselect.map((entreprise) => entreprise)
+    : [];
+  console.log(nomEntreprise);
 
   // Rendu de l'interface utilisateur
   return (
@@ -111,41 +127,58 @@ const Login = () => {
       </select> */}
 
       {/*  Champ d'autocomplétion(saisie semi-automatique) pour la sélection d'une entreprise */}
+
       <div className="login-name">
         <Autocomplete
-          title="Entreprises" //Titre de l'autocomplétion
+          title="Entreprises"
           onChange={(changedItem) => setSelectedCompany(changedItem)}
-          // Gère le changement de l'élément sélectionné
-          items={tabselect} // Liste des éléments à afficher dans l'autocomplétion
+          items={nomEntreprise || []}
         >
           {({
             getInputProps,
             getToggleButtonProps,
             getRef,
             inputValue,
+            getItemProps,
+            getMenuProps,
+            isOpen,
             toggleMenu,
           }) => (
-            <Pane ref={getRef} display="flex">
-              <TextInput
-                placeholder="Entreprise" // Placeholder du champ de texte
-                value={inputValue} // Valeur du champ de texte
-                {...getInputProps()} // Propriétés pour le champ de texte (Autocomplétion)
-              />
-              <Button
-                onClick={toggleMenu} // Gère le clic sur le bouton
-                {...getToggleButtonProps()} // Propriétés pour le bouton (Autocomplétion)
-                className="autocomplete-button" // Classe CSS pour le bouton
-              >
-                {/*Icône flèche vers le bas pour indiquer le menu déroulant  */}
-                <FaChevronDown />
-              </Button>
-            </Pane>
+            <>
+              <Pane ref={getRef} display="flex">
+                <TextInput
+                  placeholder="Entreprise"
+                  value={inputValue}
+                  {...getInputProps()}
+                />
+                <Button
+                  onClick={() => {
+                    toggleMenu();
+                  }}
+                  {...getToggleButtonProps()}
+                  className="autocomplete-button"
+                >
+                  <FaChevronDown />
+                </Button>
+              </Pane>
+
+              {isOpen && (
+                <ul {...getMenuProps()}>
+                  {nomEntreprise.map((item, index) => (
+                    <li key={item} {...getItemProps({ item })}>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </>
           )}
         </Autocomplete>
       </div>
 
       {/* Champ de mot de passe */}
       <div className="login-password">
+        <p>{tabselect}</p>
         <input
           type="password"
           placeholder="Mot de passe" // Placeholder du champ de mot de passe

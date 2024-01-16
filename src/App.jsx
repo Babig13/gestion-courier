@@ -9,20 +9,24 @@ import Login from "./pages/Login";
 import Admin from "./pages/Admin";
 import User from "./pages/User";
 import CreateUser from "./pages/CreateUser";
+import EditUser from "./pages/EditUser";
 
 const App = () => {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/admin" element={<Admin />} />
-        <Route path={"/createUser"} element={<CreateUser />} />
-        <Route path={"/user/:firmname"} element={<User />}>
-          <Route path={"/user/:firmname"} />
-          <Route path={"/user/:firmname"} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Login />} />
+          <Route path="/admin" element={<Admin />} />
+          <Route path="/admin/createuser" element={<CreateUser />} />
+          <Route path="/admin/:firm_name" element={<EditUser />} />
+          <Route path={"/user/:firm_name"} element={<User />} />
+        </Routes>
+      </BrowserRouter>
+
+      {/* <CreateUser />
+      <EditUser /> */}
+    </>
   );
   {
     /* <ThemeProvider theme={theme}></ThemeProvider>; */
