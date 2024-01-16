@@ -9,13 +9,11 @@ import "./login.css"; // Import du fichier CSS pour la page de connexion
 // Définition du composant de connexion
 const Login = () => {
   // États pour gérer les données de l'utilisateur et l'état de connexion
-  const [username, setUsername] = useState(""); // Nom de l'utilisateur (non utilisé dans le code actuel)
   const [password, setPassword] = useState(""); // Mot de passe
   const [entreprise, setEntreprise] = useState([]); // Liste des entreprises récupérée depuis l'API
   const [selectedCompany, setSelectedCompany] = useState(""); // Entreprise sélectionnée par l'utilisateur
   const [loggedIn, setLoggedIn] = useState(false); // État de connexion
   const [tabselect, settabselect] = useState([]); // Tableau pour stocker les noms des entreprises (utilisé dans Autocomplete)
-  //const [nomEntreprise, setNomEntreprise] = useState("");
 
   // Vérifier si le bouton de connexion doit être activé
   const isLoginButtonDisabled = !selectedCompany || !password;
@@ -71,7 +69,7 @@ const Login = () => {
         // Parse la réponse en JSON
         return response.json();
       })
-      // const [tabselect, settabselect] = useState([]);
+
       .then((data) => {
         // Log de la réponse brute pour le débogage
 
@@ -82,18 +80,6 @@ const Login = () => {
           // Formatage des données pour les adapter au composant Autocomplete
 
           setEntreprise(data.firmNames);
-
-          //Création d'un tableau contenant les noms des entreprises
-          const tab = data.firmNames.map((el) => el.firm_name);
-
-          // const tab = [];
-
-          // for (let i = 0; i < data.firmNames.length; i++) {
-          //   tab.push(data[i].firm_name);
-          // }
-
-          // Mise à jour de l'état du tableau des noms d'entreprises
-          settabselect(tab);
         } else {
           console.error("Aucune entreprise trouvée dans la réponse de l'API");
         }
@@ -107,8 +93,6 @@ const Login = () => {
 
   const tableauEntreprise = Object.entries(tabselect);
 
-  // const nomEntreprise = tableauEntreprise.map(([cle, valeur]) => valeur);
-  // console.log(nomEntreprise);
   const nomEntreprise = tabselect
     ? tabselect.map((entreprise) => entreprise)
     : [];
@@ -120,19 +104,13 @@ const Login = () => {
       <img src="./logo.png" alt="Logo de NotiMail" />
       {/* Composant Autocomplete pour la sélection de l'entreprise */}
 
-      {/* <select>
-        {entreprise.map((el) => {
-          return <option value={el.firm_name}>{el.firm_name}</option>;
-        })}
-      </select> */}
-
       {/*  Champ d'autocomplétion(saisie semi-automatique) pour la sélection d'une entreprise */}
 
       <div className="login-name">
         <Autocomplete
           title="Entreprises"
           onChange={(changedItem) => setSelectedCompany(changedItem)}
-          items={nomEntreprise || []}
+          items={entreprise}
         >
           {({
             getInputProps,
