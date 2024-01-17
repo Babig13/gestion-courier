@@ -14,6 +14,7 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 32px;
     height: 100vh; /* Pleine hauteur de la vue */
   }
   
@@ -22,6 +23,13 @@ body {
     max-width: 100%;
     height: auto;
   }
+ .login-page form{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+
+ }
   
   /* Style du composant Autocomplete */
   .login-page .Autocomplete {
@@ -59,7 +67,6 @@ body {
   
   /* Style du champ de mot de passe */
   .login-page .login-password {
-    margin-top: 20px;
     display: flex;
     align-items: center;
     width: 300px;
@@ -90,7 +97,6 @@ background: #EBEBEB;
   
   /* Style du bouton de connexion */
   .login-page button {
-    margin-top: 20px;
     padding: 10px 20px;
     background-color: var(--grey);
     color: var(--primary);

@@ -1,7 +1,13 @@
 //création de la page de connexion
 
 // Import des composants nécessaires depuis Evergreen UI et React
-import { Autocomplete, Button, Pane, TextInput } from "evergreen-ui";
+import {
+  Autocomplete,
+  Button,
+  Pane,
+  SelectMenu,
+  TextInput,
+} from "evergreen-ui";
 import React, { useState, useEffect } from "react";
 import { FaChevronDown, FaUnlock } from "react-icons/fa6";
 import "./login.css"; // Import du fichier CSS pour la page de connexion
@@ -15,11 +21,38 @@ const Login = () => {
   const [loggedIn, setLoggedIn] = useState(false); // État de connexion
   const [tabselect, settabselect] = useState([]); // Tableau pour stocker les noms des entreprises (utilisé dans Autocomplete)
 
+  //test
+  // useEffect(() => {
+  //   fetch("http://51.83.69.229:3000/api/users/login", {
+  //     method: "POST",
+  //     body: JSON.stringify({ firm_name: "back", password: "lh1G" }),
+  //   })
+  //     .then((res) => {
+  //       return res.json();
+  //     })
+  //     .then((res) => {
+  //       console.log(res);
+  //     });
+  // }, []);
+
+  // const [Infoconnexion, setInfoconnexion] = useState({
+  //   firm_name: "",
+  //   four_digit_code: "",
+  // });
+
   // Vérifier si le bouton de connexion doit être activé
   const isLoginButtonDisabled = !selectedCompany || !password;
 
   // Fonction appelée lorsqu'un utilisateur tente de se connecter
-  const handleLogin = () => {
+  const handleLogin = (e) => {
+    e.preventDefault(); // Empêche le rechargement de la page par défaut
+
+    // Vérifiez si les deux champs sont renseignés
+    // if (!selectedCompany || !password) {
+    //   alert("Veuillez remplir tous les champs.");
+    //   return; // Arrêtez la fonction s'il manque des informations
+    // }
+
     // Construction du corps de la requête pour l'identification du client
     const requestBody = {
       firm_name: selectedCompany,
@@ -27,28 +60,38 @@ const Login = () => {
     };
 
     // Requête au serveur pour vérifier les identifiants
-    fetch("http://51.83.69.229:3000/api/users/login", {
+    fetch(`http://51.83.69.229:3000/api/users/login`, {
       method: "POST", // Méthode POST
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
+      body: JSON.stringify(requestBody), // Convertit l'objet en format JSON
     })
       .then((response) => response.json())
       .then((data) => {
+        console.log(data);
         // Vérification du succès de la connexion
-        if (data && data.success) {
+        if (data && data.message === "Identification réussie") {
           setLoggedIn(true);
         } else {
+          // console.warn(selectedCompany, password);
           alert("Identifiants incorrects");
         }
       })
       .catch((error) => console.error(error));
   };
+  // Fonction appelée lorsqu'un utilisateur soumet le formulaire
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Appeler votre fonction de connexion ici
+    handleLogin(e);
+  };
 
   // Effet pour charger la liste des entreprises depuis l'API lors du chargement de la page
   useEffect(() => {
     // Requête au serveur pour obtenir la liste des entreprises
-    fetch("http://51.83.69.229:3000/api/users/gestionEntrepriseFirmName", {
+    fetch(`http://51.83.69.229:3000/api/users/gestionEntrepriseFirmName`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -80,6 +123,11 @@ const Login = () => {
           // Formatage des données pour les adapter au composant Autocomplete
 
           setEntreprise(data.firmNames);
+
+          //Création d'un tableau contenant les noms des entreprises
+          const tab = data.firmNames.map((el) => el.firm_name);
+          // Mise à jour de l'état du tableau des noms d'entreprises
+          settabselect(tab);
         } else {
           console.error("Aucune entreprise trouvée dans la réponse de l'API");
         }
@@ -91,86 +139,105 @@ const Login = () => {
   // const typeDuState = typeof tabselect;
   // console.log(typeDuState);
 
-  const tableauEntreprise = Object.entries(tabselect);
+  // const tableauEntreprise = Object.entries(tabselect);
 
-  const nomEntreprise = tabselect
-    ? tabselect.map((entreprise) => entreprise)
-    : [];
-  console.log(nomEntreprise);
+  // const nomEntreprise = tabselect
+  //   ? tabselect.map((entreprise) => entreprise)
+  //   : [];
+  // console.log(nomEntreprise);
 
   // Rendu de l'interface utilisateur
   return (
     <div className="login-page">
+      {/* Ajout de la balise <form> autour de votre contenu de connexion */}
       <img src="./logo.png" alt="Logo de NotiMail" />
-      {/* Composant Autocomplete pour la sélection de l'entreprise */}
 
-      {/*  Champ d'autocomplétion(saisie semi-automatique) pour la sélection d'une entreprise */}
+      <form onSubmit={handleSubmit}>
+        {/* Composant Autocomplete pour la sélection de l'entreprise */}
 
-      <div className="login-name">
-        <Autocomplete
-          title="Entreprises"
-          onChange={(changedItem) => setSelectedCompany(changedItem)}
-          items={entreprise}
-        >
-          {({
-            getInputProps,
-            getToggleButtonProps,
-            getRef,
-            inputValue,
-            getItemProps,
-            getMenuProps,
-            isOpen,
-            toggleMenu,
-          }) => (
-            <>
-              <Pane ref={getRef} display="flex">
-                <TextInput
-                  placeholder="Entreprise"
-                  value={inputValue}
-                  {...getInputProps()}
-                />
-                <Button
-                  onClick={() => {
-                    toggleMenu();
-                  }}
-                  {...getToggleButtonProps()}
-                  className="autocomplete-button"
-                >
-                  <FaChevronDown />
-                </Button>
-              </Pane>
+        {/*  Champ d'autocomplétion(saisie semi-automatique) pour la sélection d'une entreprise */}
 
-              {isOpen && (
-                <ul {...getMenuProps()}>
-                  {nomEntreprise.map((item, index) => (
-                    <li key={item} {...getItemProps({ item })}>
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </>
-          )}
-        </Autocomplete>
-      </div>
+        <div className="login-name">
+          <SelectMenu
+            title="Entreprises"
+            options={entreprise.map((label) => ({ label, value: label }))}
+            selected={selectedCompany}
+            onSelect={(item) => setSelectedCompany(item.value)}
+          >
+            <Button type="button">
+              {/* bouton evergreen en submit par défaut; à mettre en type="button" pour qu'il n'envoie pas le formulaire*/}
+              {selectedCompany || "Choisir une entreprise"}
+            </Button>
+          </SelectMenu>
 
-      {/* Champ de mot de passe */}
-      <div className="login-password">
-        <p>{tabselect}</p>
-        <input
-          type="password"
-          placeholder="Mot de passe" // Placeholder du champ de mot de passe
-          value={password} // Valeur du champ de mot de passe
-          onChange={(e) => setPassword(e.target.value)} // Gère le changement de la valeur du champ de mot de passe
-        />
-        {/* Icône de cadenas pour indiquer le champ de mot de passe */}
-        <FaUnlock />
-      </div>
+          {/* <Autocomplete
+            title="Entreprises"
+            onChange={(changedItem) => setSelectedCompany(changedItem)}
+            items={entreprise}
+          >
+            {({
+              getInputProps,
+              getToggleButtonProps,
+              getRef,
+              inputValue,
+              getItemProps,
+              getMenuProps,
+              isOpen,
+              toggleMenu,
+            }) => (
+              <>
+                <Pane ref={getRef} display="flex">
+                  <TextInput
+                    placeholder="Entreprise"
+                    value={inputValue}
+                    {...getInputProps()}
+                  />
+                  <Button
+                    onClick={() => {
+                      toggleMenu();
+                    }}
+                    {...getToggleButtonProps()}
+                    className="autocomplete-button"
+                  >
+                    <FaChevronDown />
+                  </Button>
+                </Pane>
+                {isOpen && (
+                  <ul {...getMenuProps()}>
+                    {/* {nomEntreprise.map((item, index) => ( */}
+          {/* {tabselect.map((item, index) => (
+                      <li key={item} {...getItemProps({ item })}>
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </>
+            )}
+          </Autocomplete>  */}
+        </div>
 
-      {/* Bouton de connexion */}
-      <button onClick={handleLogin} disabled={isLoginButtonDisabled}>
-        Se connecter
-      </button>
+        {/* Champ de mot de passe */}
+        <div className="login-password">
+          {/* <p>{tabselect}</p> */}
+          <input
+            type="password"
+            placeholder="Mot de passe" // Placeholder du champ de mot de passe
+            value={password} // Valeur du champ de mot de passe
+            onChange={(e) => setPassword(e.target.value)} // Gère le changement de la valeur du champ de mot de passe
+          />
+          {/* Icône de cadenas pour indiquer le champ de mot de passe */}
+          <span className="lock-icon">
+            <FaUnlock />
+          </span>
+        </div>
+
+        {/* Bouton de connexion */}
+        <button type="submit" disabled={isLoginButtonDisabled}>
+          {/* bouton normal par défaut à mettre en type="submit" */}
+          Se connecter
+        </button>
+      </form>
     </div>
   );
 };
