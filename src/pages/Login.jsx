@@ -11,6 +11,7 @@ import {
 import React, { useState, useEffect } from "react";
 import { FaChevronDown, FaUnlock } from "react-icons/fa6";
 import "./login.css"; // Import du fichier CSS pour la page de connexion
+import { Navigate, useNavigate } from "react-router-dom";
 
 // Définition du composant de connexion
 const Login = () => {
@@ -20,6 +21,9 @@ const Login = () => {
   const [selectedCompany, setSelectedCompany] = useState(""); // Entreprise sélectionnée par l'utilisateur
   const [loggedIn, setLoggedIn] = useState(false); // État de connexion
   const [tabselect, settabselect] = useState([]); // Tableau pour stocker les noms des entreprises (utilisé dans Autocomplete)
+  const [isAdmin, setIsAdmin] = useState("");
+  const navigate = useNavigate();
+  const [firmName, setFirmName] = useState("");
 
   //test
   // useEffect(() => {
@@ -62,7 +66,6 @@ const Login = () => {
     // Requête au serveur pour vérifier les identifiants
     fetch(`http://51.83.69.229:3000/api/users/login`, {
       method: "POST", // Méthode POST
-      credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
@@ -71,9 +74,33 @@ const Login = () => {
       .then((response) => response.json())
       .then((data) => {
         console.log(data);
+
         // Vérification du succès de la connexion
         if (data && data.message === "Identification réussie") {
-          setLoggedIn(true);
+          // setLoggedIn(true);
+
+          // pour stocker le token ,l'Id et le nom de l'entreprise de l'utilisateur
+          //et savoir si l'utilisateur est un administrateur (is_admin).
+          localStorage.setItem("token", data.token);
+          localStorage.setItem("userId", data.userId);
+          localStorage.setItem("firm_name", data.firm_name);
+          localStorage.setItem("is_admin", data.is_admin);
+
+          // Mise à jour de l'état isAdmin avec la valeur de data.is_admin
+          setIsAdmin(data.is_admin);
+          // Mise à jour de l'état firmName avec la valeur de data.firm_name
+          setFirmName(data.firm_name);
+          // Affichage dans la console de la valeur actuelle de isAdmin
+          console.log(isAdmin);
+
+          // Si l'utilisateur est un administrateur, navigue vers la page "/admin", sinon, navigue vers la page "/user/{firmName}"
+          // if (isAdmin === true) {
+          if (data.is_admin) {
+            navigate("/admin");
+          } else {
+            const firmName = data.firm_name;
+            navigate(`/user/${firmName}`);
+          }
         } else {
           // console.warn(selectedCompany, password);
           alert("Identifiants incorrects");
