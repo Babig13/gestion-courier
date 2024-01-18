@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import "./Header.css";
 
-export default function Header() {
+const Header = () => {
   const [companies, setCompanies] = useState([]);
 
   useEffect(() => {
@@ -44,4 +44,6 @@ export default function Header() {
       </header>
     </>
   );
-}
+};
+
+export default Header;

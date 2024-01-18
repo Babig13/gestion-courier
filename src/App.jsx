@@ -10,6 +10,7 @@ import Admin from "./pages/Admin";
 import User from "./pages/User";
 import CreateUser from "./pages/CreateUser";
 import EditUser from "./pages/EditUser";
+import Header from "./components/Header/Header";
 
 const App = () => {
   return (
