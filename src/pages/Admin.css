@@ -2,6 +2,30 @@
     display: flex;
     flex-direction: row;
     justify-content: center;
+    align-items: center;
     gap: 96px;
     background-color: rgba(255, 255, 255, 0.9);
+    position: fixed;
+    z-index: 2;
+    bottom: 0;
+    height: 92px;
+    width: 100%;
+    max-width: 700px;
+}
+
+.bottom-menu button{
+    border-radius: 50%;
+    height: 52px;
+    width: 52px;
+    border: none;
+    background-color: var(--secondary);
+    cursor: pointer;
+    
+}
+
+.admin-home{
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    align-items: center;
 }

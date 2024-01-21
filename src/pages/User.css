@@ -16,22 +16,30 @@
     fill: var(--primary) !important;
   }
   .notification{
-    color: #006C92;
+    color:var(--primary);
     font-size: 24px;
 
   }
+  .reception .--primary{
+    background:var(--primary);/* Remplacez ceci par votre couleur foncée */
+    color:var(--white); /* Couleur du texte, si nécessaire */
+  }
+  .reception.--blue-light {
+    background-color:var(--blue-light); /* Remplacez ceci par votre couleur claire */
+    color: var(--white);
+  }
+  
 
   .reception{
     display: flex;
-    width: 318px;
+    width: 320px;
     height: 72px;
     border: none;
     border-radius: 63px;
-    opacity: 0.5;
     background: #006C92;
     align-items: center;
-    display: flex;
     justify-content:center;
     color: #FFF;
     font-size: 24px;
   }
+

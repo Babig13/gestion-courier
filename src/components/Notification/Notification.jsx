@@ -1,8 +1,9 @@
+import React from "react";
 import "./Notification.css";
-import { FaCheck } from "react-icons/fa6";
-import { FaXmark } from "react-icons/fa6";
+import { FaCheck, FaTimes } from "react-icons/fa";
 import { IconContext } from "react-icons";
-export default function Notification() {
+
+const Notification = ({ onConfirm, onCancel }) => {
   return (
     <>
       <IconContext.Provider
@@ -15,10 +16,10 @@ export default function Notification() {
           </div>
 
           <div className="notif-button-frame">
-            <button className="notif-cancel-button">
-              <FaXmark />
+            <button className="notif-cancel-button" onClick={onCancel}>
+              <FaTimes />
             </button>
-            <button className="notif-validate-button">
+            <button className="notif-validate-button" onClick={onConfirm}>
               <FaCheck />
             </button>
           </div>
@@ -26,4 +27,6 @@ export default function Notification() {
       </IconContext.Provider>
     </>
   );
-}
+};
+
+export default Notification;

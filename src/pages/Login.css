@@ -95,19 +95,24 @@ background: #EBEBEB;
     color: var(--primary);
   }
   
-  /* Style du bouton de connexion */
+  
   .login-page button {
     padding: 10px 20px;
     background-color: var(--grey);
-    color: var(--primary);
     border: none;
     cursor: pointer;
     font-family: 'Kanit', sans-serif; /* Utilisation de la police Kanit */
   }
+  /* Style du bouton de connexion lorsque le formulaire est valide */
+.login-page button:disabled,
+.login-page button.valid {
+  background-color: grey; /* Couleur de fond en gris pour le formulaire valide */
+  cursor: not-allowed;
+}
   
   .login-page button:disabled {
     background-color: var(--secondary); /* Couleur de fond pour le bouton désactivé */
-    color: white;
+    color:var(--white);
     cursor: not-allowed;
     display: inline-flex;
     padding: 12px 24px;
@@ -116,4 +121,15 @@ background: #EBEBEB;
     gap: 10px;
     border-radius: 8px;
   }
+  .login-page button.connection{
+    padding: 10px 20px;
+    background-color: var(--secondary); /* Couleur verte par défaut */
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 10px; /* Bordures arrondies par défaut */
+    font-family: 'Kanit', sans-serif; /* Utilisation de la police Kanit */
+}
+
+  
   

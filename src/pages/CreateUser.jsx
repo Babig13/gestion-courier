@@ -91,8 +91,12 @@ const CreateUser = () => {
             <TextInput
               required
               value={formData.entreprise}
-              onChange={(e) =>
-                setFormData({ ...formData, entreprise: e.target.value })
+              onChange={
+                (e) => setFormData({ ...formData, entreprise: e.target.value })
+                // l'utilisation de { ...formData,entreprise: e.target.value  }
+                //  permet de mettre à jour une propriété spécifique
+                //  d'un objet tout en préservant les autres propriétés existantes de
+                //  cet objet.
               }
             />
           </label>

@@ -9,7 +9,7 @@ import {
   TextInput,
 } from "evergreen-ui";
 import React, { useState, useEffect } from "react";
-import { FaChevronDown, FaUnlock } from "react-icons/fa6";
+import { FaChevronDown, FaUnlock, FaLock } from "react-icons/fa6";
 import "./login.css"; // Import du fichier CSS pour la page de connexion
 import { Navigate, useNavigate } from "react-router-dom";
 
@@ -255,12 +255,18 @@ const Login = () => {
           />
           {/* Icône de cadenas pour indiquer le champ de mot de passe */}
           <span className="lock-icon">
-            <FaUnlock />
+            {password ? <FaUnlock /> : <FaLock />}{" "}
+            {/* Condition pour afficher l'icône appropriée */}
+            {/* FaLock: cadenas fermé / FaUnlock: cadenas ouvert */}
           </span>
         </div>
 
         {/* Bouton de connexion */}
-        <button type="submit" disabled={isLoginButtonDisabled}>
+        <button
+          className="connection"
+          type="submit"
+          disabled={isLoginButtonDisabled}
+        >
           {/* bouton normal par défaut à mettre en type="submit" */}
           Se connecter
         </button>

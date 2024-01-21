@@ -22,13 +22,16 @@
     flex-direction: row;
     gap: 62px;
 }
+.custom-modal-container{
+    background:var(--primary) !important;
+}
 
-.notification-modal{
+ .notification-modal{
     display: flex;
     flex-direction: column;
     gap: 24px;
     align-items: center;
-    padding: 36px 32px;
+   padding-bottom: 52px;
     background-color: var(--primary);
     width: fit-content;
     border-radius: 12px;
@@ -39,4 +42,4 @@
     font-family: var(--body);
     color: var(--white);
     font-weight: 500;
-}
+} 
