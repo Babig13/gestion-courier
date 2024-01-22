@@ -81,7 +81,7 @@ body {
     padding: 10px;
     border: none;
     border-radius: 8px;
-background: #EBEBEB;
+    background: #EBEBEB;
   }
   .login-page .login-password, .login-page .login-password input {
     display: flex;
@@ -104,11 +104,11 @@ background: #EBEBEB;
     font-family: 'Kanit', sans-serif; /* Utilisation de la police Kanit */
   }
   /* Style du bouton de connexion lorsque le formulaire est valide */
-.login-page button:disabled,
+/* .login-page button:disabled,
 .login-page button.valid {
   background-color: grey; /* Couleur de fond en gris pour le formulaire valide */
-  cursor: not-allowed;
-}
+  
+
   
   .login-page button:disabled {
     background-color: var(--secondary); /* Couleur de fond pour le bouton désactivé */
@@ -130,6 +130,12 @@ background: #EBEBEB;
     border-radius: 10px; /* Bordures arrondies par défaut */
     font-family: 'Kanit', sans-serif; /* Utilisation de la police Kanit */
 }
-
-  
-  
+  /* .empty-fields-alert {
+    background-color: #ff7b7b;
+    color: #fff;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+  } */
+    
+    

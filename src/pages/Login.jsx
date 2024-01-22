@@ -1,13 +1,7 @@
 //création de la page de connexion
 
 // Import des composants nécessaires depuis Evergreen UI et React
-import {
-  Autocomplete,
-  Button,
-  Pane,
-  SelectMenu,
-  TextInput,
-} from "evergreen-ui";
+import { Button, Pane, SelectMenu, TextInput } from "evergreen-ui";
 import React, { useState, useEffect } from "react";
 import { FaChevronDown, FaUnlock, FaLock } from "react-icons/fa6";
 import "./login.css"; // Import du fichier CSS pour la page de connexion
@@ -47,6 +41,9 @@ const Login = () => {
   // Vérifier si le bouton de connexion doit être activé
   const isLoginButtonDisabled = !selectedCompany || !password;
 
+  // Nouvel état pour gérer l'alerte des champs vides
+  const [emptyFieldsAlert, setEmptyFieldsAlert] = useState(false);
+
   // Fonction appelée lorsqu'un utilisateur tente de se connecter
   const handleLogin = (e) => {
     e.preventDefault(); // Empêche le rechargement de la page par défaut
@@ -56,6 +53,11 @@ const Login = () => {
     //   alert("Veuillez remplir tous les champs.");
     //   return; // Arrêtez la fonction s'il manque des informations
     // }
+
+    if (!selectedCompany || !password) {
+      setEmptyFieldsAlert(true);
+      return;
+    }
 
     // Construction du corps de la requête pour l'identification du client
     const requestBody = {
@@ -106,8 +108,10 @@ const Login = () => {
           alert("Identifiants incorrects");
         }
       })
-      .catch((error) => console.error(error));
+      .catch((error) => console.error(error))
+      .finally(() => setEmptyFieldsAlert(false)); // Réinitialise l'état de l'alerte après la requête
   };
+
   // Fonction appelée lorsqu'un utilisateur soumet le formulaire
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -196,52 +200,6 @@ const Login = () => {
               {selectedCompany || "Choisir une entreprise"}
             </Button>
           </SelectMenu>
-
-          {/* <Autocomplete
-            title="Entreprises"
-            onChange={(changedItem) => setSelectedCompany(changedItem)}
-            items={entreprise}
-          >
-            {({
-              getInputProps,
-              getToggleButtonProps,
-              getRef,
-              inputValue,
-              getItemProps,
-              getMenuProps,
-              isOpen,
-              toggleMenu,
-            }) => (
-              <>
-                <Pane ref={getRef} display="flex">
-                  <TextInput
-                    placeholder="Entreprise"
-                    value={inputValue}
-                    {...getInputProps()}
-                  />
-                  <Button
-                    onClick={() => {
-                      toggleMenu();
-                    }}
-                    {...getToggleButtonProps()}
-                    className="autocomplete-button"
-                  >
-                    <FaChevronDown />
-                  </Button>
-                </Pane>
-                {isOpen && (
-                  <ul {...getMenuProps()}>
-                    {/* {nomEntreprise.map((item, index) => ( */}
-          {/* {tabselect.map((item, index) => (
-                      <li key={item} {...getItemProps({ item })}>
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </>
-            )}
-          </Autocomplete>  */}
         </div>
 
         {/* Champ de mot de passe */}
@@ -260,6 +218,13 @@ const Login = () => {
             {/* FaLock: cadenas fermé / FaUnlock: cadenas ouvert */}
           </span>
         </div>
+
+        {/* Affiche une alerte si les champs sont vides */}
+        {emptyFieldsAlert && (
+          <div className="empty-fields-alert">
+            Veuillez remplir tous les champs.
+          </div>
+        )}
 
         {/* Bouton de connexion */}
         <button

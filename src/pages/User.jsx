@@ -17,13 +17,21 @@ const User = () => {
   const [isShown, setIsShown] = React.useState(false);
   //pour ouvrir la modale quand on clique sur le bouton "réceptionner"
 
+  // Effectuez la demande POST pour accuser la récupération du courrier
+  const userId = localStorage.getItem("userId");
+
   useEffect(() => {
     // code d'effet va ici
 
     // Effectuez la requête pour vérifier le courrier en attente
     const userId = localStorage.getItem("userId"); // Récupère l'ID de l'utilisateur depuis le stockage local
 
-    fetch(`http://51.83.69.229:3000/api/users/checkMail/${userId}`)
+    fetch(`http://51.83.69.229:3000/api/users/checkMail/${userId}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
       .then((response) => response.json())
       .then((data) => {
         // Vérifiez si le courrier est en attente
@@ -50,27 +58,25 @@ const User = () => {
     console.log("Courrier confirmé!");
     setHasMail(false); // Mettre à jour l'état pour indiquer que le courrier a été reçu
     setIsShown(false); // Ferme la modale
-  };
 
-  // Effectuez la demande POST pour accuser la récupération du courrier
-  const userId = localStorage.getItem("userId");
-
-  fetch(`http://51.83.69.229:3000/api/users/acknowledgeMail/${userId}`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    // Vous pouvez envoyer des données supplémentaires si nécessaire
-    // body: JSON.stringify({ additionalData: "valeur" }),
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      // Traitez la réponse si nécessaire
-      console.log("Réponse de la demande POST:", data);
+    fetch(`http://51.83.69.229:3000/api/users/acknowledgeMail/${userId}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      // Vous pouvez envoyer des données supplémentaires si nécessaire
+      // body: JSON.stringify({ additionalData: "valeur" }),
     })
-    .catch((error) => {
-      console.error("Erreur lors de la demande POST:", error);
-    });
+      .then((response) => response.json())
+      .then((data) => {
+        // Traitez la réponse si nécessaire
+        console.log("Réponse de la demande POST:", data);
+      })
+
+      .catch((error) => {
+        console.error("Erreur lors de la demande POST:", error);
+      });
+  };
 
   const handleCancel = () => {
     // Ajoutez le code à exécuter lors de l'annulation
