@@ -18,6 +18,10 @@ const Login = () => {
   const [isAdmin, setIsAdmin] = useState("");
   const navigate = useNavigate();
   const [firmName, setFirmName] = useState("");
+  const [buttonDisabled, setButtonDisabled] = useState(false); // Nouvel état pour bloquer le bouton
+  // ...
+  const [showAlert, setShowAlert] = useState(false);
+  // ...
 
   //test
   // useEffect(() => {
@@ -41,22 +45,20 @@ const Login = () => {
   // Vérifier si le bouton de connexion doit être activé
   const isLoginButtonDisabled = !selectedCompany || !password;
 
-  // Nouvel état pour gérer l'alerte des champs vides
-  const [emptyFieldsAlert, setEmptyFieldsAlert] = useState(false);
+  // // Nouvel état pour gérer l'alerte des champs vides
+  // const [emptyFieldsAlert, setEmptyFieldsAlert] = useState(false);
 
   // Fonction appelée lorsqu'un utilisateur tente de se connecter
   const handleLogin = (e) => {
     e.preventDefault(); // Empêche le rechargement de la page par défaut
 
-    // Vérifiez si les deux champs sont renseignés
-    // if (!selectedCompany || !password) {
-    //   alert("Veuillez remplir tous les champs.");
-    //   return; // Arrêtez la fonction s'il manque des informations
-    // }
+    // Ajout temporaire d'une alerte simple
+    // alert("Test d'alerte");
 
+    // Vérifie si les deux champs sont renseignés
     if (!selectedCompany || !password) {
-      setEmptyFieldsAlert(true);
-      return;
+      alert("Veuillez remplir tous les champs.");
+      return; // Arrêtez la fonction s'il manque des informations
     }
 
     // Construction du corps de la requête pour l'identification du client
@@ -64,6 +66,8 @@ const Login = () => {
       firm_name: selectedCompany,
       four_digit_code: password,
     };
+
+    setButtonDisabled(true);
 
     // Requête au serveur pour vérifier les identifiants
     fetch(`http://51.83.69.229:3000/api/users/login`, {
@@ -104,17 +108,27 @@ const Login = () => {
             navigate(`/user/${firmName}`);
           }
         } else {
-          // console.warn(selectedCompany, password);
-          alert("Identifiants incorrects");
+          alert("Identifiants incorrects, veuillez réessayer dans 10 secondes");
+          // Utilisation de setTimeout pour débloquer le bouton après 10 secondes
+          setTimeout(() => {
+            setButtonDisabled(false);
+          }, 10000);
         }
       })
       .catch((error) => console.error(error))
-      .finally(() => setEmptyFieldsAlert(false)); // Réinitialise l'état de l'alerte après la requête
+      .finally(() => {
+        // Réinitialise l'état de l'alerte après la requête
+        setEmptyFieldsAlert(false);
+      });
   };
-
   // Fonction appelée lorsqu'un utilisateur soumet le formulaire
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    // if (!selectedCompany || !password) {
+    //   alert("Veuillez remplir tous les champs.");
+    //   return;
+    // }
     // Appeler votre fonction de connexion ici
     handleLogin(e);
   };
@@ -184,12 +198,9 @@ const Login = () => {
       <img src="./logo.png" alt="Logo de NotiMail" />
 
       <form onSubmit={handleSubmit}>
-        {/* Composant Autocomplete pour la sélection de l'entreprise */}
-
-        {/*  Champ d'autocomplétion(saisie semi-automatique) pour la sélection d'une entreprise */}
-
         <div className="login-name">
           <SelectMenu
+            required // Ajout de l'attribut required pour activer l'alerte par défaut
             title="Entreprises"
             options={entreprise.map((label) => ({ label, value: label }))}
             selected={selectedCompany}
@@ -204,8 +215,8 @@ const Login = () => {
 
         {/* Champ de mot de passe */}
         <div className="login-password">
-          {/* <p>{tabselect}</p> */}
           <input
+            required // Ajout de l'attribut required pour activer l'alerte par défaut
             type="password"
             placeholder="Mot de passe" // Placeholder du champ de mot de passe
             value={password} // Valeur du champ de mot de passe
@@ -219,8 +230,8 @@ const Login = () => {
           </span>
         </div>
 
-        {/* Affiche une alerte si les champs sont vides */}
-        {emptyFieldsAlert && (
+        {/* Affiche une alerte si les champs sont vides*/}
+        {showAlert && (
           <div className="empty-fields-alert">
             Veuillez remplir tous les champs.
           </div>
@@ -230,7 +241,7 @@ const Login = () => {
         <button
           className="connection"
           type="submit"
-          disabled={isLoginButtonDisabled}
+          disabled={buttonDisabled || isLoginButtonDisabled}
         >
           {/* bouton normal par défaut à mettre en type="submit" */}
           Se connecter

@@ -31,13 +31,6 @@ body {
 
  }
   
-  /* Style du composant Autocomplete */
-  .login-page .Autocomplete {
-    margin-top: 20px;
-    width: 80%; /* Ajustez la largeur selon les besoins */
-    display: flex;
-  }
-  
 
   .login-page .login-name {
     display: flex;
@@ -130,12 +123,12 @@ body {
     border-radius: 10px; /* Bordures arrondies par défaut */
     font-family: 'Kanit', sans-serif; /* Utilisation de la police Kanit */
 }
-  /* .empty-fields-alert {
+   .empty-fields-alert {
     background-color: #ff7b7b;
     color: #fff;
     padding: 10px;
     border-radius: 8px;
     margin-bottom: 10px;
-  } */
+  } 
     
     
