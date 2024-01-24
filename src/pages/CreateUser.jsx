@@ -11,12 +11,12 @@ const CreateUser = () => {
 
   // États pour gérer les données du formulaire
   const [formData, setFormData] = useState({
-    entreprise: "",
-    prenom: "",
-    nom: "",
-    telephone: "",
+    firm_name: "",
+    first_name: "",
+    last_name: "",
+    phone_number: "",
     email: "",
-    isAdmin: false,
+    is_admin: false,
   });
 
   // Fonction pour gérer la soumission du formulaire
@@ -36,7 +36,7 @@ const CreateUser = () => {
       })
       .catch((error) => console.error(error));
     // Exemple : redirection vers la page de connexion après la création de l'utilisateur
-    navigate("/login");
+    navigate("/admin");
   };
 
   // Fonction pour gérer la suppression d'un utilisateur
@@ -90,13 +90,9 @@ const CreateUser = () => {
             Entreprise
             <TextInput
               required
-              value={formData.entreprise}
-              onChange={
-                (e) => setFormData({ ...formData, entreprise: e.target.value })
-                // l'utilisation de { ...formData,entreprise: e.target.value  }
-                //  permet de mettre à jour une propriété spécifique
-                //  d'un objet tout en préservant les autres propriétés existantes de
-                //  cet objet.
+              value={formData.firm_name}
+              onChange={(e) =>
+                setFormData({ ...formData, firm_name: e.target.value })
               }
             />
           </label>
@@ -109,9 +105,9 @@ const CreateUser = () => {
                 Prénom
                 <TextInput
                   required
-                  value={formData.prenom}
+                  value={formData.first_name}
                   onChange={(e) =>
-                    setFormData({ ...formData, prenom: e.target.value })
+                    setFormData({ ...formData, first_name: e.target.value })
                   }
                 />
               </label>
@@ -123,9 +119,9 @@ const CreateUser = () => {
                 Nom
                 <TextInput
                   required
-                  value={formData.nom}
+                  value={formData.last_name}
                   onChange={(e) =>
-                    setFormData({ ...formData, nom: e.target.value })
+                    setFormData({ ...formData, last_name: e.target.value })
                   }
                 />
               </label>
@@ -137,9 +133,9 @@ const CreateUser = () => {
             Téléphone
             <TextInput
               required
-              value={formData.telephone}
+              value={formData.phone_number}
               onChange={(e) =>
-                setFormData({ ...formData, telephone: e.target.value })
+                setFormData({ ...formData, phone_number: e.target.value })
               }
             />
           </label>
@@ -161,10 +157,11 @@ const CreateUser = () => {
           <label>
             Admin
             <Checkbox
-              checked={formData.isAdmin}
-              onChange={(e) =>
-                setFormData({ ...formData, isAdmin: e.target.checked })
-              }
+              checked={formData.is_admin}
+              onChange={(e) => {
+                setFormData({ ...formData, is_admin: e.target.checked });
+                console.log(formData);
+              }}
             />
           </label>
 
@@ -182,7 +179,7 @@ const CreateUser = () => {
 
             {/* Bouton Terminer */}
             <Button appearance="primary" intent="success" type="submit">
-              Terminer
+              Créer
             </Button>
           </div>
         </form>

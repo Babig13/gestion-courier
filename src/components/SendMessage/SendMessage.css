@@ -1,0 +1,47 @@
+.notify-frame{
+    color: var(--white);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 24px 0;
+}
+.companies-to-notify{
+    background-color: var(--primaryLight);
+    border-radius: 8px;
+}
+
+.companies-to-notify-list{
+    list-style: disc;
+    font-size: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.notify-button-frame{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 54px;
+    margin: 12px 0;
+}
+
+.notify-button-frame button{
+    border: none;
+    border-radius: 8px;
+    font-family: var(--body);
+    font-weight: 500;
+    font-size: 16px;
+    color: var(--white);
+    padding: 12px 24px;
+    cursor: pointer;
+}
+
+.send-message-cancel{
+    background-color: var(--red);
+}
+
+.send-message-send{
+    background-color: var(--secondary);
+}

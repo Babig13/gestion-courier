@@ -5,6 +5,7 @@ import { FaArrowLeft, FaTrash } from "react-icons/fa6";
 import "./EditUser.css"; // Lien vers le fichier CSS
 import { useNavigate, useParams } from "react-router-dom"; // Ajout de l'import pour revenir en arrière
 
+// TODO:
 // Définition du composant de création de compte
 const EditUser = () => {
   // États pour gérer les données du formulaire
@@ -12,32 +13,16 @@ const EditUser = () => {
   const { firm_name } = useParams();
 
   const [formData, setFormData] = useState({
-    entreprise: "",
-    prenom: "",
-    nom: "",
-    telephone: "",
+    firm_name: "",
+    first_name: "",
+    last_name: "",
+    phone_number: "",
     email: "",
-    isAdmin: false,
+    is_admin: false,
   });
 
   // Effet pour charger les données de l'utilisateur lors du chargement du composant
   useEffect(() => {
-    //  Utilisation de l'API pour obtenir un utilisateur par le nom de l'entreprise
-    // fetch("http://51.83.69.229:3000/api/user/firm/:firm_name", {
-    //   method: "GET", // Méthode GET
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-
-    //   //body: JSON.stringify(formData), // Ajout des données du formulaire
-
-    //   // N'oubliez pas de mettre le vrai nom de l'entreprise ici
-    //   // Par exemple, si formData.entreprise est "NomEntreprise", l'URL devrait être `/firm/NomEntreprise`
-    // })
-    //   .then((response) => response.json())
-    //   .then((userData) => {
-    //     // Mettre à jour l'état avec les données récupérées
-
     // Utilisez une fonction asynchrone pour effectuer la requête
     const fetchCompanyData = async () => {
       try {

@@ -9,8 +9,8 @@
   :root {
 
   --primary: #025892;/*bleu du logo*/
-  --blue-light:#7FB5C8;
-  --primaryLight: #267114;
+  /* --blue-light:#7FB5C8; */
+  --primaryLight: #2671A4;
   --secondary: #008787;/*bleu-vert du logo*/
   --red: #DB162F;
   --validation: #049D2F;/*pour les boutons de validation*/
@@ -18,7 +18,10 @@
   --white: #FFFFFF;/*texte*/
   --black: #000000;/*texte*/
   /*--text: #006C92;*/
+  --body: 'Karla', sans-serif;
+  --header: 'Kanit', sans-serif:
   }
+
  
   /*color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);

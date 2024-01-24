@@ -5,30 +5,19 @@ import { Spinner } from "evergreen-ui";
 import "./CardEntreprise.css";
 import { Link } from "react-router-dom";
 
-export default function CardEntreprise() {
+export default function CardEntreprise({ searchTerm, setSelectedCompanies }) {
   /* Afficher ou pas la 2e partie de la card */
   const [visibilityMap, setVisibilityMap] = useState({});
-  // Fonction pour basculer la visibilité d'une entreprise spécifique
-  const toggleVisibility = (companyId) => {
-    setVisibilityMap((prevState) => ({
-      ...prevState,
-      [companyId]: !prevState[companyId],
-    }));
-  };
-
   /* Vérification de la reception du courrier. */
   const [courrierReceptionne, setCourrierReceptionne] = useState(false);
-
   /* Vérifier que l'information a bien été récupéré*/
   const [load, setLoad] = useState(true);
-
-  /* Checkbox */
-  const [checked, setChecked] = React.useState(true);
   // Permet de selectionner les cases individuellement.
-  const [selectedCompanies, setSelectedCompanies] = useState({});
 
   /* Fetch pour récupérer les informations d'entreprise */
   const [companies, setCompanies] = useState([]);
+  // État pour stocker les entreprises filtrées
+  const [filteredCompanies, setFilteredCompanies] = useState([]);
 
   useEffect(() => {
     const requestBody = {};
@@ -46,9 +35,6 @@ export default function CardEntreprise() {
         return response.json();
       })
       .then((data) => {
-        // setCompanies(data)
-        // setLoad(false);
-        // console.log(data)
         setCompanies(data);
         const receptionne = data.some((company) => company.has_mail); // Vérifiez si au moins une entreprise a reçu le courrier
         setCourrierReceptionne(receptionne);
@@ -61,20 +47,54 @@ export default function CardEntreprise() {
       });
   }, []);
 
-  const handleCheckboxChange = (companyId) => {
-    setSelectedCompanies((prevState) => ({
+  useEffect(() => {
+    // Le useEffect s'exécute chaque fois que searchTerm ou companies change.
+
+    if (searchTerm && searchTerm.trim() !== "") {
+      // Vérifie si searchTerm existe et n'est pas une chaîne vide après avoir retiré les espaces.
+
+      // Crée une expression régulière (regex) pour effectuer une recherche insensible à la casse.
+      const searchRegex = new RegExp(searchTerm, "i");
+
+      // Filtre les entreprises en fonction du terme de recherche.
+      const filteredData = companies.filter((company) => {
+        const { firm_name, first_name, last_name } = company;
+
+        // Vérifie si le terme de recherche correspond à firm_name, first_name ou last_name.
+        return (
+          searchRegex.test(firm_name) ||
+          searchRegex.test(first_name) ||
+          searchRegex.test(last_name)
+        );
+      });
+
+      // Met à jour l'état avec les entreprises filtrées.
+      setFilteredCompanies(filteredData);
+    } else {
+      // Si le terme de recherche est vide, affiche toutes les entreprises sans filtre.
+      setFilteredCompanies(companies);
+    }
+  }, [searchTerm, companies]);
+
+  // Permet de différencier les checkbox  {clé  : valeur, clé : valeur }
+  const handleCheckboxChange = (company) => {
+    setSelectedCompanies((prevState) => [
+      ...prevState,
+      { _id: company._id, firm_name: company.firm_name },
+    ]);
+  };
+
+  // Fonction pour basculer la visibilité d'une entreprise spécifique
+  const toggleVisibility = (companyId) => {
+    setVisibilityMap((prevState) => ({
       ...prevState,
       [companyId]: !prevState[companyId],
     }));
   };
 
+  // Au click sur l'icone edit envoie des données vers nouvelle page dans l'url
   const handleIconClick = (firm_name) => {
-    // Mettre à jour l'état avec les données à envoyer si nécessaire
-    // ...
-
     // Naviguer vers la nouvelle page avec les données
-    // Utilisez Link de React Router au lieu de l'ancre a
-    // Assurez-vous d'avoir défini la route correspondante dans votre fichier de configuration des routes
     const editPath = `/admin/${firm_name}`;
     history.push(editPath);
   };
@@ -86,8 +106,8 @@ export default function CardEntreprise() {
         {load ? (
           <Spinner size={24} />
         ) : (
-          companies &&
-          companies.map((items, index) => (
+          filteredCompanies &&
+          filteredCompanies.map((company, index) => (
             <div className="companie-card" key={index}>
               <div className="top-companie-card">
                 <div className="top-left-card">
@@ -100,7 +120,7 @@ export default function CardEntreprise() {
                       }`}
                     ></div>
 
-                    <Link to={`/admin/${companies[index].firm_name}`}>
+                    <Link to={`/admin/${company.firm_name}`}>
                       <IconContext.Provider
                         value={{
                           color: "white",
@@ -115,53 +135,48 @@ export default function CardEntreprise() {
 
                   <div
                     className="card-open"
-                    onClick={() => toggleVisibility(companies[index]._id)}
+                    onClick={() => toggleVisibility(company._id)}
                   >
-                    <h2>{companies[index].firm_name}</h2>
+                    <h2>{company.firm_name}</h2>
 
                     <p>
-                      {companies[index].first_name} {companies[index].last_name}
+                      {company.first_name} {company.last_name}
                     </p>
 
                     <p>
-                      {companies[index].last_picked_up ||
+                      {company.last_picked_up ||
                         `N'a pas encore reçu de courrier`}
                     </p>
                   </div>
                 </div>
 
                 <div>
-                  {/* <Checkbox
-                                className="card-selection"
-                                checked={selectedCompanies[companies[index]._id]}
-                                onChange={() => handleCheckboxChange(companies[index]._id)}
-                            /> */}
-
                   <input
                     type="checkbox"
                     className="card-selection"
-                    checked={!!selectedCompanies[companies[index]._id]}
-                    onChange={() => handleCheckboxChange(companies[index]._id)}
+                    onChange={() => handleCheckboxChange(company)}
                   />
                 </div>
               </div>
 
-              {visibilityMap[companies[index]._id] && (
+              {visibilityMap[company._id] && (
                 <IconContext.Provider
-                  value={{ color: "white", className: "", size: "24px" }}
+                  value={{
+                    color: "white",
+                    className: "companies-icons",
+                    size: "24px",
+                  }}
                 >
                   <div className="bottom-companie-card">
                     <div>
                       <FaAt />
-                      <a href={`mailto:${companies[index].email}`}>
-                        {companies[index].email}
-                      </a>
+                      <a href={`mailto:${company.email}`}>{company.email}</a>
                     </div>
 
                     <div>
                       <FaPhone />
-                      <a href={`tel:${companies[index].phone_number}`}>
-                        {companies[index].phone_number}
+                      <a href={`tel:${company.phone_number}`}>
+                        {company.phone_number}
                       </a>
                     </div>
                   </div>
