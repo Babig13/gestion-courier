@@ -1,16 +1,19 @@
 // Import des composants nécessaires depuis Evergreen UI et React
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Button, Card, TextInput, Checkbox } from "evergreen-ui";
 import { FaArrowLeft, FaTrash } from "react-icons/fa6";
 import "./EditUser.css"; // Lien vers le fichier CSS
 import { useNavigate, useParams } from "react-router-dom"; // Ajout de l'import pour revenir en arrière
 
-// TODO:
 // Définition du composant de création de compte
 const EditUser = () => {
   // États pour gérer les données du formulaire
   const navigate = useNavigate();
   const { firm_name } = useParams();
+  const [adminId, setAdminId] = useState("");
+  const isMounted = useRef(true);
+  const [userId, setUserId] = useState("");
+  const [userToken, setUserToken] = useState("");
 
   const [formData, setFormData] = useState({
     firm_name: "",
@@ -21,27 +24,38 @@ const EditUser = () => {
     is_admin: false,
   });
 
+  useEffect(() => {
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    const getAdminId = localStorage.getItem("userId");
+    const getToken = localStorage.getItem("token");
+    setAdminId(getAdminId);
+    setUserToken(getToken);
+  }, []);
+
   // Effet pour charger les données de l'utilisateur lors du chargement du composant
   useEffect(() => {
-    // Utilisez une fonction asynchrone pour effectuer la requête
     const fetchCompanyData = async () => {
       try {
-        // Utilisez le nom de l'entreprise extrait de useParams dans l'URL de la requête
         const response = await fetch(
-          `http://51.83.69.229:3000/api/user/firm/${firm_name}`
+          `http://51.83.69.229:3000/api/users/firm/${firm_name}`
         );
 
-        // Vérifiez si la requête a réussi
         if (response.ok) {
           const userData = await response.json();
-          // Mettez à jour l'état avec les données récupérées
+          console.log(userData);
+          setUserId(userData._id);
           setFormData({
-            entreprise: userData.entreprise,
-            prenom: userData.prenom,
-            nom: userData.nom,
-            telephone: userData.telephone,
+            firm_name: userData.firm_name,
+            first_name: userData.first_name,
+            last_name: userData.last_name,
+            phone_number: userData.phone_number,
             email: userData.email,
-            isAdmin: userData.isAdmin,
+            is_admin: userData.is_admin,
           });
         } else {
           console.error(
@@ -56,34 +70,48 @@ const EditUser = () => {
       }
     };
 
-    // Appelez la fonction fetchCompanyData
     fetchCompanyData();
   }, [firm_name]);
 
   // Fonction pour gérer la soumission du formulaire
-  const handleSubmit = () => {
-    fetch(`http://51.83.69.229:3000/api/users/firm/${firm_name}`, {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    fetch(`http://51.83.69.229:3000/api/users/update/${userId}`, {
       method: "PUT", // Méthode PUT
       headers: {
+        Authorization: `Bearer ${userToken}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(formData), // Ajout des données du formulaire
     })
-      .then((response) => response.json())
+      .then((response) => {
+        console.log(response);
+        return response.json();
+      })
+
       .then((data) => {
         console.log(data);
       })
-      .catch((error) => console.error(error));
-    // Exemple : redirection vers la page de connexion après la création de l'utilisateur
-    navigate("/login");
+      .catch((error) => {
+        console.error(error);
+      });
+    // redirection vers la page de connexion après la création de l'utilisateur
+    if (isMounted.current) {
+      // redirection vers la page d'administration après la mise à jour
+      navigate("/admin");
+    }
   };
 
   // Fonction pour gérer la suppression d'un utilisateur
-  const handleDelete = () => {
+  const handleDelete = (e) => {
+    e.preventDefault();
+
     // Utilisation de l'API pour supprimer un utilisateur par son ID
-    fetch(`http://51.83.69.229:3000/api/users/delete/${userData.id}`, {
+    fetch(`http://51.83.69.229:3000/api/users/delete/${userId}`, {
       method: "DELETE", // Méthode DELETE
       headers: {
+        Authorization: `Bearer ${userToken}`,
         "Content-Type": "application/json",
       },
     })
@@ -95,7 +123,9 @@ const EditUser = () => {
       })
       .catch((error) => console.error(error));
     // Exemple : redirection vers la page d'administration après la suppression
-    navigate("/admin");
+    setTimeout(() => {
+      navigate("/admin");
+    }, 1000);
   };
 
   return (
@@ -117,7 +147,7 @@ const EditUser = () => {
         </Button>
 
         {/* Titre "Entreprise" */}
-        <h2>Entreprise</h2>
+        <h2>{firm_name}</h2>
       </div>
 
       {/* Carte (Card) contenant le formulaire */}
@@ -129,42 +159,38 @@ const EditUser = () => {
             Entreprise
             <TextInput
               required
-              value={formData.entreprise}
+              value={formData.firm_name}
               onChange={(e) =>
-                setFormData({ ...formData, entreprise: e.target.value })
+                setFormData({ ...formData, firm_name: e.target.value })
               }
             />
           </label>
 
           {/* Champs Prénom et Nom côte à côte */}
           <div className="name-fields">
-            <div>
-              {/* Champ Prénom */}
-              <label>
-                Prénom
-                <TextInput
-                  required
-                  value={formData.prenom}
-                  onChange={(e) =>
-                    setFormData({ ...formData, prenom: e.target.value })
-                  }
-                />
-              </label>
-            </div>
+            {/* Champ Prénom */}
+            <label>
+              Prénom
+              <TextInput
+                required
+                value={formData.first_name}
+                onChange={(e) =>
+                  setFormData({ ...formData, first_name: e.target.value })
+                }
+              />
+            </label>
 
-            <div>
-              {/* Champ Nom */}
-              <label>
-                Nom
-                <TextInput
-                  required
-                  value={formData.nom}
-                  onChange={(e) =>
-                    setFormData({ ...formData, nom: e.target.value })
-                  }
-                />
-              </label>
-            </div>
+            {/* Champ Nom */}
+            <label>
+              Nom
+              <TextInput
+                required
+                value={formData.last_name}
+                onChange={(e) =>
+                  setFormData({ ...formData, last_name: e.target.value })
+                }
+              />
+            </label>
           </div>
 
           {/* Champ Téléphone */}
@@ -172,9 +198,9 @@ const EditUser = () => {
             Téléphone
             <TextInput
               required
-              value={formData.telephone}
+              value={formData.phone_number}
               onChange={(e) =>
-                setFormData({ ...formData, telephone: e.target.value })
+                setFormData({ ...formData, phone_number: e.target.value })
               }
             />
           </label>
@@ -196,9 +222,9 @@ const EditUser = () => {
           <label>
             Admin
             <Checkbox
-              checked={formData.isAdmin}
+              checked={formData.is_admin}
               onChange={(e) =>
-                setFormData({ ...formData, isAdmin: e.target.checked })
+                setFormData({ ...formData, is_admin: e.target.checked })
               }
             />
           </label>
@@ -207,6 +233,7 @@ const EditUser = () => {
           <div className="form-buttons">
             {/* Bouton Supprimer */}
             <Button
+              type="button"
               appearance="primary"
               intent="danger"
               iconBefore={FaTrash}
