@@ -115,11 +115,11 @@ const Login = () => {
           }, 10000);
         }
       })
-      .catch((error) => console.error(error))
-      .finally(() => {
-        // Réinitialise l'état de l'alerte après la requête
-        setEmptyFieldsAlert(false);
-      });
+      .catch((error) => console.error(error));
+    // .finally(() => {
+    //   // Réinitialise l'état de l'alerte après la requête
+    //   setEmptyFieldsAlert(false);
+    // });
   };
   // Fonction appelée lorsqu'un utilisateur soumet le formulaire
   const handleSubmit = (e) => {

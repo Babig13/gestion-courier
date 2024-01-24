@@ -15,7 +15,7 @@ const PrivateComponent = () => {
   console.log("Est un administrateur:", isAdmin);
 
   // Redirige l'utilisateur en fonction de son statut
-  return isAdmin ? <Navigate to="/admin" /> : <Navigate to="/" />;
+  return isAdmin ? <Outlet /> : <Navigate to="/" />;
 };
 
 export default PrivateComponent;
