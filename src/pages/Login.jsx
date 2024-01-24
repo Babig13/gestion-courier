@@ -20,17 +20,13 @@ const Login = () => {
   const [firmName, setFirmName] = useState("");
   const [buttonDisabled, setButtonDisabled] = useState(false); // Nouvel état pour bloquer le bouton
   const [showAlert, setShowAlert] = useState(false);
-  
-
 
   // Vérifier si le bouton de connexion doit être activé
   const isLoginButtonDisabled = !selectedCompany || !password;
 
-
   // Fonction appelée lorsqu'un utilisateur tente de se connecter
   const handleLogin = (e) => {
     e.preventDefault(); // Empêche le rechargement de la page par défaut
-
 
     // Vérifie si les deux champs sont renseignés
     if (!selectedCompany || !password) {
@@ -93,7 +89,8 @@ const Login = () => {
         }
       })
       .catch((error) => console.error(error));
- 
+  };
+
   // Fonction appelée lorsqu'un utilisateur soumet le formulaire
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -149,12 +146,11 @@ const Login = () => {
       .catch((error) => console.error(error));
   }, []);
 
-
   // Rendu de l'interface utilisateur
   return (
     <div className="login-page">
-      {/* Ajout de la balise <form> autour de votre contenu de connexion */}
-      <img src="./logo.png" alt="Logo de NotiMail" />
+      {/* Ajout de la balise <form> autour du contenu de connexion */}
+      <img src="/logo.png" alt="Logo de NotiMail" />
 
       <form onSubmit={handleSubmit}>
         <div className="login-name">

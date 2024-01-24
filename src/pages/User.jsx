@@ -90,9 +90,9 @@ const User = () => {
       <div className="rien">
         {/* Affiche l'icône d'enveloppe avec la classe "enveloppe-icon" pour la personnalisation du style */}
         {hasMail ? (
-          <IoMdMailUnread className="enveloppe-icon" />
+          <img src="/notification.png" alt="enveloppe point rouge" />
         ) : (
-          <FaEnvelope className="enveloppe-icon" />
+          <img src="/pasdenotification.png" alt="enveloppe vide" />
         )}
 
         {/*"?" suivi de ":" permet de remplacer la condition "if" et "else" mais 
