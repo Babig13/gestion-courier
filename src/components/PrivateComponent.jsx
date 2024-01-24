@@ -5,8 +5,7 @@ const PrivateComponent = () => {
   // Récupère la valeur du statut d'administrateur depuis le stockage local
   const auth = localStorage.getItem("is_admin");
 
-  // console.log(auth);
-  // return auth ? <Navigate to="/admin" /> : <Navigate to="/" />;
+  //auth= authentification
 
   console.log("Valeur d'authentification:", auth);
 
