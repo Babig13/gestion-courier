@@ -35,34 +35,14 @@ const CreateUser = () => {
         //history.push("/login");
       })
       .catch((error) => console.error(error));
-    // Exemple : redirection vers la page de connexion après la création de l'utilisateur
-    navigate("/admin");
-  };
-
-  // Fonction pour gérer la suppression d'un utilisateur
-  const handleDelete = () => {
-    // Utilisation de l'API pour supprimer un utilisateur par son ID
-    fetch(`http://51.83.69.229:3000/api/users/delete/${userData.id}`, {
-      method: "DELETE", // Méthode DELETE
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        // Ajoutez ici la logique pour traiter la réponse de la suppression
-        // Par exemple, rediriger l'utilisateur vers une autre page ou actualiser la liste des utilisateurs, etc.
-      })
-      .catch((error) => console.error(error));
-    // Exemple : redirection vers la page d'administration après la suppression
+    // redirection vers la page de connexion après la création de l'utilisateur
     navigate("/admin");
   };
 
   return (
     <div className="create-user-page">
       {/* Logo */}
-      <img src="../logo.png" alt="Logo de NotiMail" />
+      <img src="/logo.png" alt="Logo de NotiMail" />
 
       <div className="header-container">
         {/* Bouton de retour */}
@@ -78,11 +58,16 @@ const CreateUser = () => {
         </Button>
 
         {/* Titre "Entreprise" */}
-        <h2>Entreprise</h2>
+        <h2>Nouvel utilisateur</h2>
       </div>
 
       {/* Carte (Card) contenant le formulaire */}
-      <Card elevation={1} className="user-form-card">
+      <Card
+        borderRadius={12}
+        padding={32}
+        elevation={1}
+        className="user-form-card"
+      >
         {/* Formulaire */}
         <form onSubmit={handleSubmit}>
           {/* Champ Entreprise */}
@@ -166,17 +151,7 @@ const CreateUser = () => {
           </label>
 
           {/* Boutons */}
-          <div className="form-buttons">
-            {/* Bouton Supprimer */}
-            <Button
-              appearance="primary"
-              intent="danger"
-              iconBefore={FaTrash} //icone poubelle
-              onClick={handleDelete}
-            >
-              Supprimer
-            </Button>
-
+          <div className="form-buttons" id="form-button-create">
             {/* Bouton Terminer */}
             <Button appearance="primary" intent="success" type="submit">
               Créer

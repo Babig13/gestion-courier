@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Header from "../components/Header/Header";
 import "./user.css";
-import { FaEnvelope } from "react-icons/fa6";
-import { IoMdMailUnread } from "react-icons/io"; //enveloppe avec notification
 import Notification from "../components/Notification/Notification";
 import { Dialog } from "evergreen-ui";
 
@@ -85,7 +83,7 @@ const User = () => {
   };
 
   return (
-    <div>
+    <div className="user-frame">
       <Header /> {/* Composant pour l'en-tête de la page utilisateur */}
       <div className="rien">
         {/* Affiche l'icône d'enveloppe avec la classe "enveloppe-icon" pour la personnalisation du style */}

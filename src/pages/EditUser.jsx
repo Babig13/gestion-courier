@@ -14,6 +14,7 @@ const EditUser = () => {
   const isMounted = useRef(true);
   const [userId, setUserId] = useState("");
   const [userToken, setUserToken] = useState("");
+  const [mdpsent, setMdpSent] = useState(false);
 
   const [formData, setFormData] = useState({
     firm_name: "",
@@ -128,10 +129,39 @@ const EditUser = () => {
     }, 1000);
   };
 
+  // // Demande à l'api de générer nouveau mots de passe
+  // const handleNewPassword = (e) => {
+  //     // Eviter que le bouton recharge la page
+  //     e.preventDefault();
+  //     fetch(`http://51.83.69.229:3000/api/users/${routeàdéfinir}/${userId}`, {
+  //         method: 'POST', // Méthode POST
+  //         headers: {
+  //             "Authorization": `Bearer ${userToken}`,
+  //             "Content-Type": "application/json",
+  //         },
+  //     })
+  //     .then((response) => {
+  //         // Vérifier que ça fonctionne
+  //         if (response.ok) {
+  //             // si ça fonctionne set dans true la réponse possitive
+  //             setMdpSent(true);
+  //           }
+  //         console.log(response);
+  //         return response.json();
+
+  //     })
+  //     .then((data) => {
+  //         console.log(data);
+  //     })
+  //     .catch((error) => {
+  //         console.error(error);
+  //     });
+  // }
+
   return (
     <div className="edit-user-page">
       {/* Logo */}
-      <img src="../logo.png" alt="Logo de NotiMail" />
+      <img src="/logo.png" alt="Logo de NotiMail" />
 
       <div className="header-container">
         {/* Bouton de retour */}
@@ -151,7 +181,12 @@ const EditUser = () => {
       </div>
 
       {/* Carte (Card) contenant le formulaire */}
-      <Card elevation={1} className="user-form-card">
+      <Card
+        borderRadius={12}
+        padding={32}
+        elevation={1}
+        className="user-form-card"
+      >
         {/* Formulaire */}
         <form onSubmit={handleSubmit}>
           {/* Champ Entreprise */}
@@ -228,6 +263,17 @@ const EditUser = () => {
               }
             />
           </label>
+
+          {/* <Button
+            width={"100%"}
+            marginTop={12}
+            type="button"
+            onClick={handleNewPassword}
+            >
+                Envoyer un nouveau mots de passe à l'utilisateur
+        </Button>
+
+        <p>{mdpsent ? `Mots de passe envoyés à ${firm_name}` : `L'envoi n'a pas fonctionné.`}</p> */}
 
           {/* Boutons */}
           <div className="form-buttons">

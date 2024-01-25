@@ -15,11 +15,11 @@ const Login = () => {
   const [selectedCompany, setSelectedCompany] = useState(""); // Entreprise sélectionnée par l'utilisateur
   const [loggedIn, setLoggedIn] = useState(false); // État de connexion
   const [tabselect, settabselect] = useState([]); // Tableau pour stocker les noms des entreprises (utilisé dans Autocomplete)
-  const [isAdmin, setIsAdmin] = useState("");
-  const navigate = useNavigate();
-  const [firmName, setFirmName] = useState("");
+  const [isAdmin, setIsAdmin] = useState(""); //État pour gérer le statut administrateur
+  const navigate = useNavigate(); // Utilisation du hook useNavigate pour la navigation dans l'application
+  const [firmName, setFirmName] = useState(""); // État pour stocker le nom de l'entreprise
   const [buttonDisabled, setButtonDisabled] = useState(false); // Nouvel état pour bloquer le bouton
-  const [showAlert, setShowAlert] = useState(false);
+  const [showAlert, setShowAlert] = useState(false); // État pour contrôler l'affichage de l'alerte
 
   // Vérifier si le bouton de connexion doit être activé
   const isLoginButtonDisabled = !selectedCompany || !password;
@@ -40,6 +40,7 @@ const Login = () => {
       four_digit_code: password,
     };
 
+    // Désactive le bouton après soumission du formulaire, l'utilisateur ne pourra plus cliquer .
     setButtonDisabled(true);
 
     // Requête au serveur pour vérifier les identifiants
@@ -50,7 +51,10 @@ const Login = () => {
       },
       body: JSON.stringify(requestBody), // Convertit l'objet en format JSON
     })
-      .then((response) => response.json())
+      .then((response) => response.json()) //transforme la réponse HTTP en un objet JavaScript.
+
+      // affiche dans la console les données (objet JavaScript)
+      //utilisé à des fins de débogage pour voir les données renvoyées par le serveur.
       .then((data) => {
         console.log(data);
 
@@ -81,7 +85,12 @@ const Login = () => {
             navigate(`/user/${firmName}`);
           }
         } else {
-          alert("Identifiants incorrects, veuillez réessayer dans 10 secondes");
+          alert(
+            "Identifiants incorrects, veuillez réessayer dans 10 secondes.\n" +
+              // Ajout du  caractère '\n' pour faire un saut de ligne
+              "Mot de passe oublié, contactez l'administrateur."
+          );
+
           // Utilisation de setTimeout pour débloquer le bouton après 10 secondes
           setTimeout(() => {
             setButtonDisabled(false);
@@ -114,13 +123,21 @@ const Login = () => {
           throw new Error("Réponse non valide du serveur");
         }
 
-        // Vérifier le type de contenu de la réponse
+        // Vérifier le type de contenu de la réponse = content-type
+
+        // Récupère le type de contenu de l'en-tête de la réponse
         const contentType = response.headers.get("content-type");
+        // Vérifie si le type de contenu existe et s'il inclut "application/json"
         if (!contentType || !contentType.includes("application/json")) {
+          // Lance une erreur si le type de contenu n'est pas au format JSON
           throw new Error("La réponse n'est pas au format JSON");
         }
 
-        // Parse la réponse en JSON
+        //Si l'une de ces conditions n'est pas remplie = "La réponse n'est pas au format JSON".
+        //on s'assure que la réponse attendue est au format JSON avant de tenter
+        //de la traiter en tant que telle.
+
+        //si la réponse est au format JSON, on Parse(convertit) la réponse en JSON
         return response.json();
       })
 
@@ -131,8 +148,6 @@ const Login = () => {
 
         // Vérification du succès de la récupération des entreprises
         if (data.firmNames && data.firmNames.length > 0) {
-          // Formatage des données pour les adapter au composant Autocomplete
-
           setEntreprise(data.firmNames);
 
           //Création d'un tableau contenant les noms des entreprises

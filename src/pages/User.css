@@ -1,45 +1,48 @@
 .rien {
-    font-family: Kanit; 
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 32px;
-    height: 100vh; /* Pleine hauteur de la vue */
-  }
-  .enveloppe-icon{
-    width: 135px !important;
-    height: 135px !important;
-    fill: var(--primary) !important;
-  }
-  .notification{
-    color:var(--primary);
-    font-size: 24px;
+  font-family: Kanit; 
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+  height: 100vh; /* Pleine hauteur de la vue */
+}
+.enveloppe-icon{
+  width: 135px !important;
+  height: 135px !important;
+  fill: var(--primary) !important;
+}
+.notification{
+  color:var(--primary);
+  font-size: 24px;
 
-  }
-  .reception .--primary{
-    background:var(--primary);/* Remplacez ceci par votre couleur foncée */
-    color:var(--white); /* Couleur du texte, si nécessaire */
-  }
-  .reception.--blue-light {
-    background-color:var(--blue-light); /* Remplacez ceci par votre couleur claire */
-    color: var(--white);
-  }
-  
+}
+.reception .--primary{
+  background:var(--primary);/* Remplacez ceci par votre couleur foncée */
+  color:var(--white); /* Couleur du texte, si nécessaire */
+}
+.reception.--blue-light {
+  background-color:var(--blue-light); /* Remplacez ceci par votre couleur claire */
+  color: var(--white);
+}
 
-  .reception{
-    display: flex;
-    width: 320px;
-    height: 72px;
-    border: none;
-    border-radius: 63px;
-    background: #006C92;
-    align-items: center;
-    justify-content:center;
-    color: #FFF;
-    font-size: 24px;
-  }
 
+.reception{
+  display: flex;
+  width: 320px;
+  height: 72px;
+  border: none;
+  border-radius: 63px;
+  background: #006C92;
+  align-items: center;
+  justify-content:center;
+  color: #FFF;
+  font-size: 24px;
+}
+
+.user-frame button{
+cursor: pointer;
+}

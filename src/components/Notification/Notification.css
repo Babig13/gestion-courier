@@ -1,11 +1,12 @@
 .notification-modal button{
-    height: 50px;
-    width: 50px;
+    height: 66px;
+    width: 66px;
     border-radius: 70px;
     border: none;    
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
 }
 
 .notif-cancel-button{
