@@ -86,7 +86,7 @@ const User = () => {
     <div className="user-frame">
       <Header /> {/* Composant pour l'en-tête de la page utilisateur */}
       <div className="rien">
-        {/* Affiche l'icône d'enveloppe avec la classe "enveloppe-icon" pour la personnalisation du style */}
+        {/* Affiche l'image d'enveloppe */}
         {hasMail ? (
           <img src="/notification.png" alt="enveloppe point rouge" />
         ) : (
